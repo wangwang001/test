@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <audio controls autoplay></audio>
+        <input onclick="startRecording()" type="button" value="录音" />
+        <input onclick="stopRecording()" type="button" value="停止" />
+        <input onclick="playRecording()" type="button" value="播放" />
+        <input onclick="test()" type="button" value="点击将录音转文字, 在控制台查看结果" />
+    </div>
+
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script type="text/javascript" src="HZRecorder.js"></script>
+    <script>
+        var recorder;
+        var audio = document.querySelector('audio');
+        function startRecording() {
+            HZRecorder.get(function (rec) {
+                recorder = rec;
+                recorder.start();
+            });
+        }
+        function stopRecording() {
+            recorder.stop();
+        }
+        function playRecording() {
+            recorder.play(audio);
+        }
+    </script>
+    <script>
+        function test () {
+            let data = new FormData()
+            let blob = recorder.getBlob()
+            data.append('audio', blob)
+            axios.post('https://staging-stcsm-svr.marketbox.cn/api/voice/', data)
+        }
+    </script>
+</body>
+</html>
